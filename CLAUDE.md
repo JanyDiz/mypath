@@ -1,7 +1,7 @@
 # mypath — Project Brief & Decisions
 
 > Interview-prep web app, narrowly focused on **design (UX/UI/product) and product-management** roles.
-> Project name: mypath. Status: planning complete; design repo structured locally, push to GitHub pending auth. Last updated: 2026-06-10.
+> Project name: mypath. Status: planning complete; design repo structured and pushed to GitHub (SSH). Last updated: 2026-06-10.
 
 ## 1. Product
 
@@ -105,9 +105,6 @@ Data model: `users` · `rubrics` (versioned) · `sessions` (user, JD, resume ref
 ### Structure (design repo)
 `research/` (research.md + screens/) · `wireframes/` · `concept/` · `tokens/` · `components/` · `design-system/` · `handoff/`. README.md is the living index. Pipeline: research → concept → wireframes → tokens → components → design-system → handoff.
 
-### Status & how to push
-- Repo initialized locally with commits (CLAUDE.md, README.md, .gitignore, folder structure). **Not yet pushed to GitHub** — the remote is set, but no GitHub credentials are configured, so `git push` fails with "could not read Username".
-- To push, authenticate once (any of):
-  - **HTTPS + token:** `git -C /Users/user/mypath push -u origin main`, then enter username `JanyDiz` and a Personal Access Token (Contents: Read & write) as the password. macOS keychain caches it after first success.
-  - **GitHub CLI:** `brew install gh` → `gh auth login` (browser-based) → push.
-  - **SSH:** switch remote to `git@github.com:JanyDiz/mypath.git` if an SSH key is on the GitHub account.
+### Auth & push
+- **Pushed to GitHub over SSH.** Remote is `git@github.com:JanyDiz/mypath.git`; `main` tracks `origin/main`.
+- Auth uses the local `~/.ssh/id_rsa` key (RSA), registered on the `JanyDiz` GitHub account. Normal `git push` works from `/Users/user/mypath`.
