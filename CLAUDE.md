@@ -1,7 +1,7 @@
-# DesignPrep — Project Brief & Decisions
+# mypath — Project Brief & Decisions
 
 > Interview-prep web app, narrowly focused on **design (UX/UI/product) and product-management** roles.
-> Working name: DesignPrep. Status: planning complete, at zero (no code yet). Last updated: 2026-06-10.
+> Project name: mypath. Status: planning complete; design repo structured locally, push to GitHub pending auth. Last updated: 2026-06-10.
 
 ## 1. Product
 
@@ -93,3 +93,21 @@ Data model: `users` · `rubrics` (versioned) · `sessions` (user, JD, resume ref
 6. Second format (behavioral)
 7. Stripe (sub + pass) + free-tier gating
 8. Polish, responsive pass, landing page → ship → recruit first users
+
+## 6. Repository
+
+- **Local path:** `/Users/user/mypath/`
+- **GitHub remote (origin):** `https://github.com/JanyDiz/mypath.git`
+- **Default branch:** `main`
+- **Git identity:** jonyyug <jonyyug@gmail.com> (GitHub username: `JanyDiz`)
+- **Tooling:** Homebrew available; `gh` (GitHub CLI) NOT installed.
+
+### Structure (design repo)
+`research/` (research.md + screens/) · `wireframes/` · `concept/` · `tokens/` · `components/` · `design-system/` · `handoff/`. README.md is the living index. Pipeline: research → concept → wireframes → tokens → components → design-system → handoff.
+
+### Status & how to push
+- Repo initialized locally with commits (CLAUDE.md, README.md, .gitignore, folder structure). **Not yet pushed to GitHub** — the remote is set, but no GitHub credentials are configured, so `git push` fails with "could not read Username".
+- To push, authenticate once (any of):
+  - **HTTPS + token:** `git -C /Users/user/mypath push -u origin main`, then enter username `JanyDiz` and a Personal Access Token (Contents: Read & write) as the password. macOS keychain caches it after first success.
+  - **GitHub CLI:** `brew install gh` → `gh auth login` (browser-based) → push.
+  - **SSH:** switch remote to `git@github.com:JanyDiz/mypath.git` if an SSH key is on the GitHub account.
