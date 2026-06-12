@@ -1,7 +1,7 @@
 # mypath — Project Brief & Decisions
 
 > Interview-prep web app, narrowly focused on **design (UX/UI/product) and product-management** roles.
-> Project name: mypath. Status: planning complete; design repo structured and pushed to GitHub (SSH). Last updated: 2026-06-10.
+> Project name: mypath. Status: planning complete; design repo structured and pushed to GitHub (SSH). Last updated: 2026-06-12.
 
 ## 1. Product
 
@@ -30,8 +30,15 @@ Competitive reality (from research, June 2026): competitors already have *some* 
 - **Fast-follow order:** Design challenge (async, NN/g-anchored) → PM discipline (CIRCLES-anchored) → Portfolio *upload* (multimodal, factors in actual visuals) → Real-time live voice call (premium).
 - Lead with judgment depth, **not** live voice (UXMock already owns live voice).
 
+### Pressure mechanics
+The product trains **delivery under constraint**, not edited writing.
+- **Per-question timer** with format-specific defaults: portfolio walkthrough **5 min/question**, behavioral **3 min/question**.
+- **Voice answers committed on submit** — no re-record within a session.
+- **Text answers committed on submit** — no infinite editing.
+- **"Practice mode"** (no timer, re-record allowed) available for the first 1–2 sessions of a new user, then locked behind an explicit toggle.
+
 ### Monetization
-- Free tier (2–3 full sessions so users feel the rubric depth).
+- **Free tier:** 1 full session per format, with the rubric visible **read-only** — users feel the depth of judgment without getting the value loop for free. Progress view shows lifetime trends only **after the first paid session**.
 - **Subscription** ~$12–15/mo + discounted annual.
 - **Job-cycle one-time pass** ~$30–45 — because prep is burst usage (intense for weeks, then abandoned); a pure sub would churn hard.
 - Market benchmark: AI tools cluster $8–25/mo, free tiers everywhere, annual is the discount lever.
@@ -80,15 +87,21 @@ Public anchors: **NN/g heuristic evaluation** (design challenge — every critiq
 | 5 | Outcome & accountability | 15% | Honest result incl. what went wrong; owns it | Only wins; no accountability |
 | 6 | Structure & clarity (STAR floor) | 10% | Easy to follow; complete arc, not robotic | Missing pieces or mechanical recitation |
 
+### Rubric iteration loop (the actual moat)
+Every evaluation is stamped with `rubric_version`. Users can flag per-criterion disagreement on any evaluation ("this score is wrong"); flags + internal review feed a **weekly rubric review by the senior designer**. New rubric versions are published as **v1.1, v1.2…** (immutable history); old evaluations remain visible against the rubric they were scored under.
+
+**Why this is the moat, not the rubric content.** The rubric document itself is replicable by any senior designer in ~2 weeks. What is *not* replicable is the **closed-loop machinery** that detects evaluator drift, surfaces edge cases, and ships rubric updates faster than competitors can react. Without this, the depth advantage decays to zero within ~6 months.
+
 ## 5. Architecture sketch
 
-Data model: `users` · `rubrics` (versioned) · `sessions` (user, JD, resume ref, format, status) · `questions` (session, prompt, source rubric) · `answers` (question, text/transcript, audio ref) · `evaluations` (answer, per-criterion scores JSON, overall, feedback) · `subscriptions/entitlements` (Stripe).
+Data model: `users` · `rubrics` (versioned) · `sessions` (user, JD, resume ref, format, status) · `questions` (session, prompt, source rubric) · `answers` (question, text/transcript, audio ref) · `evaluations` (answer, per-criterion scores JSON, overall, feedback, **`rubric_version`**) · `flags` (evaluation, criterion, user note — feeds the rubric iteration loop) · `subscriptions/entitlements` (Stripe).
 
 ### Build order to first paying users
 1. Scaffold + auth + DB schema
 2. JD/resume intake → question generation (one format first)
 3. Answer capture (text, then voice→STT)
 4. **Rubric engine + evaluation UI** ← most effort here; it's the product
+4b. **Evaluator review tooling (internal)** — per-criterion flagging on the user side, override + rubric-diff interface on the admin side, so the v1.0 → v1.1 cycle is operational *before* public launch. **Don't ship without this** — feedback-quality bug-fixing is otherwise blind.
 5. Session save + progress view
 6. Second format (behavioral)
 7. Stripe (sub + pass) + free-tier gating
