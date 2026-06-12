@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mypath — Research</title>
+<style>
+  :root{
+    --bg:#0b0e14; --bg-soft:#11151f; --card:#151a26; --card-2:#1a2030;
+    --border:#262d3d; --border-soft:#1e2433;
+    --text:#e6ebf5; --muted:#9aa6bd; --faint:#6b758c;
+    --accent:#5eead4; --accent-2:#7c8cff; --warn:#fbbf24; --bad:#f87171; --good:#4ade80;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:radial-gradient(1200px 600px at 80% -10%, #14203a 0%, transparent 60%), var(--bg);
+    color:var(--text); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 22px 100px}
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ---- header ---- */
+  header{padding:72px 0 34px; border-bottom:1px solid var(--border-soft)}
+  .eyebrow{color:var(--accent); font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:12px}
+  h1{font-size:clamp(34px,5vw,52px); line-height:1.05; margin:14px 0 12px; letter-spacing:-.02em}
+  h1 .dim{color:var(--muted); font-weight:400}
+  .sub{color:var(--muted); max-width:680px; font-size:17px}
+  .meta{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px}
+  .chip{background:var(--card); border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:999px; font-size:12.5px}
+
+  /* ---- nav ---- */
+  nav{position:sticky; top:0; z-index:20; background:rgba(11,14,20,.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border-soft); margin-bottom:46px}
+  nav .wrap{display:flex; gap:6px; flex-wrap:wrap; padding-top:12px; padding-bottom:12px}
+  nav a{color:var(--muted); font-size:13.5px; padding:6px 12px; border-radius:8px; font-weight:500}
+  nav a:hover{background:var(--card); color:var(--text); text-decoration:none}
+
+  /* ---- sections ---- */
+  section{margin:64px 0; scroll-margin-top:64px}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px}
+  .sec-num{font-size:13px; color:var(--accent); font-weight:700; font-variant-numeric:tabular-nums}
+  h2{font-size:28px; margin:0; letter-spacing:-.01em}
+  .lead{color:var(--muted); margin:10px 0 26px; max-width:760px}
+
+  /* ---- cards ---- */
+  .grid{display:grid; gap:16px}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  .card{background:linear-gradient(180deg,var(--card) 0%,var(--bg-soft) 100%); border:1px solid var(--border);
+    border-radius:var(--r); padding:20px}
+  .card h3{margin:0 0 4px; font-size:17px}
+  .card .url{font-size:12.5px; color:var(--faint); font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .card p{margin:10px 0 0; color:var(--muted); font-size:14px}
+  .card ul{margin:10px 0 0; padding-left:18px; color:var(--muted); font-size:14px}
+  .card li{margin:3px 0}
+  .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:3px 9px; border-radius:6px; margin-bottom:10px}
+  .t-hard{background:rgba(248,113,113,.14); color:#fca5a5; border:1px solid rgba(248,113,113,.3)}
+  .t-soft{background:rgba(251,191,36,.13); color:#fcd34d; border:1px solid rgba(251,191,36,.28)}
+  .t-asp{background:rgba(94,234,212,.12); color:var(--accent); border:1px solid rgba(94,234,212,.28)}
+  .strength{color:var(--good)} .weak{color:var(--bad)}
+
+  /* ---- tables ---- */
+  .table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--r)}
+  table{border-collapse:collapse; width:100%; font-size:13px; min-width:680px}
+  th,td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--border-soft); white-space:nowrap}
+  thead th{background:var(--card-2); color:var(--text); position:sticky; top:0; font-weight:600}
+  tbody tr:hover{background:rgba(124,140,255,.05)}
+  td:first-child,th:first-child{position:sticky; left:0; background:var(--card); font-weight:500; z-index:1}
+  thead th:first-child{z-index:2; background:var(--card-2)}
+  .col-target{background:rgba(94,234,212,.07)}
+  th.col-target{background:rgba(94,234,212,.12); color:var(--accent)}
+  .yes{color:var(--good)} .no{color:var(--bad)} .mid{color:var(--warn)}
+  .num{font-variant-numeric:tabular-nums; text-align:center}
+
+  /* score cells */
+  .s{font-weight:700; text-align:center; font-variant-numeric:tabular-nums}
+  .s0{color:#6b758c} .s1{color:#f87171} .s2{color:#fbbf24} .s3{color:#a3e635} .s4{color:#4ade80}
+  .total{font-weight:800; background:var(--card-2)}
+
+  /* ---- pattern list ---- */
+  .pat{display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--border-soft)}
+  .pat:last-child{border-bottom:0}
+  .pat .k{flex:0 0 34px; height:34px; border-radius:9px; display:grid; place-items:center; font-weight:800;
+    background:var(--card-2); border:1px solid var(--border); color:var(--muted)}
+  .pat h3{margin:2px 0 4px; font-size:16px}
+  .pat p{margin:4px 0; color:var(--muted); font-size:14px}
+  .pat.chosen .k{background:rgba(94,234,212,.16); color:var(--accent); border-color:rgba(94,234,212,.4)}
+  .pat.chosen{background:linear-gradient(90deg,rgba(94,234,212,.06),transparent); border-radius:12px; padding:18px}
+  .pick{margin-top:22px; background:rgba(94,234,212,.07); border:1px solid rgba(94,234,212,.28);
+    border-radius:var(--r); padding:20px 22px}
+  .pick h3{margin:0 0 10px; color:var(--accent)}
+  .pick ol{margin:0; padding-left:20px; color:var(--muted)}
+  .pick li{margin:6px 0}
+
+  /* ---- conclusions ---- */
+  .concl{display:grid; gap:14px; grid-template-columns:repeat(2,1fr)}
+  .concl .card{border-left:3px solid var(--accent-2)}
+  .concl .card.win{border-left-color:var(--accent)}
+  .kpi{display:flex; align-items:center; gap:16px; margin-top:18px; background:var(--card); border:1px solid var(--border);
+    border-radius:var(--r); padding:20px 22px}
+  .kpi .big{font-size:40px; font-weight:800; color:var(--accent); letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+  .kpi .lab{color:var(--muted); font-size:14px}
+
+  /* ---- screens ---- */
+  .shots{display:grid; gap:16px; grid-template-columns:repeat(3,1fr)}
+  figure{margin:0; background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden}
+  figure img{display:block; width:100%; height:170px; object-fit:cover; object-position:top center; border-bottom:1px solid var(--border)}
+  figcaption{padding:10px 14px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; gap:8px}
+  figcaption b{color:var(--text); font-weight:600}
+  .mini{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 7px; border-radius:5px}
+
+  footer{margin-top:80px; padding-top:24px; border-top:1px solid var(--border-soft); color:var(--faint); font-size:13px}
+
+  @media(max-width:820px){
+    .grid-2,.grid-3,.concl{grid-template-columns:1fr}
+    .shots{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:520px){ .shots{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">mypath · Research</div>
+    <h1>Конкурентное исследование <span class="dim">для AI-подготовки к интервью дизайнеров и PM</span></h1>
+    <p class="sub">Три уровня: кто конкуренты, насколько глубоким должен быть фидбек (наш moat) и как устроен ключевой цикл продукта. Данные собраны в июне 2026 — live-fetch страниц + Playwright-скриншоты.</p>
+    <div class="meta">
+      <span class="chip">Июнь 2026</span>
+      <span class="chip">2 hard · 4 soft · 3 aspirational</span>
+      <span class="chip">8 скриншотов</span>
+      <span class="chip">Цель фидбека: ≥30/32</span>
+    </div>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#competitors">Конкуренты</a>
+  <a href="#benchmark">Бенчмарк</a>
+  <a href="#patterns">Паттерны</a>
+  <a href="#conclusions">Выводы</a>
+  <a href="#matrix">Таблица сравнения</a>
+  <a href="#screens">Скриншоты</a>
+</div></nav>
+
+<div class="wrap">
+
+  <!-- ================= COMPETITORS ================= -->
+  <section id="competitors">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Конкуренты</h2></div>
+    <p class="lead">Три тира: <b>Hard</b> — лоб-в-лоб, та же задача и аудитория; <b>Soft</b> — та же задача другими средствами; <b>Aspirational</b> — другой домен, но планка опыта, к которой мы стремимся.</p>
+
+    <h3 style="color:#fca5a5; font-size:14px; letter-spacing:.04em; text-transform:uppercase; margin:24px 0 12px">🔴 Hard — прямые, заточенные под design/PM</h3>
+    <div class="grid grid-2">
+      <div class="card">
+        <span class="tag t-hard">Hard</span>
+        <h3>Mockin</h3><div class="url">mockin.work</div>
+        <ul>
+          <li>UX/UI &amp; Product дизайнеры, Junior → Design Manager</li>
+          <li>3 формата мок-интервью, 200+ вопросов, динамические follow-up, <b>STAR</b>, голос</li>
+          <li>Portfolio Checker, Resume/LinkedIn, Job Matcher</li>
+          <li>Цена: free (резюме) · $9 день · $25/мес · $45/3 мес</li>
+          <li><span class="strength">+ широкий тулкит, ~15k юзеров</span></li>
+          <li><span class="weak">− STAR-уклон, глубина судства не доказана, нет design challenge</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag t-hard">Hard</span>
+        <h3>UXMock.io</h3><div class="url">uxmock.io</div>
+        <ul>
+          <li>UX/product дизайнеры, whiteboard / design challenge</li>
+          <li><b>Real-time голос</b> (15–60 мин), <b>JD → design challenge</b>, загрузка вайрфреймов</li>
+          <li>Рубрика из 6 измерений (/10) + Overall, транскрипты, история</li>
+          <li>Цена: free 3 сессии/мес · Pro $12.99/мес</li>
+          <li><span class="strength">+ владеют real-time + design challenge, чистая рубрика</span></li>
+          <li><span class="weak">− рубрика дженерик, нет portfolio/behavioral, нет PM</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="color:#fcd34d; font-size:14px; letter-spacing:.04em; text-transform:uppercase; margin:28px 0 12px">🟡 Soft — та же задача, другие средства</h3>
+    <div class="grid grid-2">
+      <div class="card"><span class="tag t-soft">Soft</span><h3>Exponent</h3><div class="url">tryexponent.com</div><p>AI-моки с грейдингом по hiring-рубрике (communication, problem-solving, structured thinking). Сильный механизм, покрывает PM — <b>но не заточен под дизайн</b>; AI-фидбек только платно.</p></div>
+      <div class="card"><span class="tag t-soft">Soft</span><h3>Yoodli</h3><div class="url">yoodli.ai</div><p>Общий AI speaking-коуч: async-отчёты + real-time подсказки в интервью. Коучит <b>подачу</b> (темп, слова-паразиты), а не суждение design/PM. Роль-агностик.</p></div>
+      <div class="card"><span class="tag t-soft">Soft</span><h3>Google Interview Warmup</h3><div class="url">grow.google</div><p>Бесплатно: проговариваешь ответы (есть UX-категория), AI транскрибирует и подсвечивает термины / talking points / паттерны речи. Низкий порог, <b>но без скоринга и суждения</b>.</p></div>
+      <div class="card"><span class="tag t-soft">Soft</span><h3>ADPList</h3><div class="url">adplist.org</div><p><b>Бесплатный живой</b> 1:1-коучинг; 133+ ментора-хайринг-менеджера; покрывает design-портфолио и PM/case. Настоящее суждение — но привязка к расписанию, нестабильно, не on-demand.</p></div>
+    </div>
+    <p class="lead" style="margin-top:14px">Якорь цены: платный живой коучинг — <b>$100–300/сессия</b>; AI-инструменты — <b>$8–25/мес</b>.</p>
+
+    <h3 style="color:#5eead4; font-size:14px; letter-spacing:.04em; text-transform:uppercase; margin:28px 0 12px">🟢 Aspirational — планка опыта (другой домен)</h3>
+    <div class="grid grid-3">
+      <div class="card"><span class="tag t-asp">Aspir.</span><h3>Grammarly</h3><p><b>Крафт фидбека:</b> inline-подсказки с объяснением «почему», тон/цели, многомерная оценка вместо одной цифры — «без потери твоего голоса».</p></div>
+      <div class="card"><span class="tag t-asp">Aspir.</span><h3>Speak</h3><p><b>Голос + диагностика:</b> «говори вслух — получай мгновенный фидбек»; хвалят за объяснение, <i>почему</i> формулировка слабая. Адаптивная программа.</p></div>
+      <div class="card"><span class="tag t-asp">Aspir.</span><h3>Duolingo</h3><p><b>Привычка и прогресс:</b> стрики, видимый рост навыка, лёгкий ежедневный цикл — модель удержания, превращающая burst-подготовку в привычку.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= BENCHMARK ================= -->
+  <section id="benchmark">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Бенчмарк</h2></div>
+    <p class="lead">Измерение выбрано одно — <b>качество и глубина фидбека</b>. Это и есть moat: голос, JD-парсинг и цена — гигиена, которую конкуренты уже умеют. 8 критериев × 5 эталонов, шкала 0–4. Живой коуч (ADPList) показан как потолок суждения.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Критерий</th><th class="num">Mockin</th><th class="num">UXMock</th><th class="num">Exponent</th><th class="num">Yoodli</th><th class="num">Grammarly</th><th class="num">Коуч</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>1 · Покритериальный скоринг</td><td class="s s1">1</td><td class="s s3">3</td><td class="s s3">3</td><td class="s s1">1</td><td class="s s3">3</td><td class="s s4">4</td></tr>
+          <tr><td>2 · Доказательность («почему»)</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s4">4</td><td class="s s4">4</td></tr>
+          <tr><td>3 · Actionability</td><td class="s s3">3</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s4">4</td><td class="s s4">4</td></tr>
+          <tr><td>4 · Заточка под формат</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s0">0</td><td class="s s1">1</td><td class="s s4">4</td></tr>
+          <tr><td>5 · Сеньорность суждения</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s2">2</td><td class="s s1">1</td><td class="s s1">1</td><td class="s s4">4</td></tr>
+          <tr><td>6 · Прозрачность рубрики</td><td class="s s1">1</td><td class="s s3">3</td><td class="s s2">2</td><td class="s s1">1</td><td class="s s2">2</td><td class="s s3">3</td></tr>
+          <tr><td>7 · Прогресс во времени</td><td class="s s1">1</td><td class="s s3">3</td><td class="s s2">2</td><td class="s s3">3</td><td class="s s3">3</td><td class="s s1">1</td></tr>
+          <tr><td>8 · Конструктивный тон</td><td class="s s3">3</td><td class="s s3">3</td><td class="s s2">2</td><td class="s s3">3</td><td class="s s4">4</td><td class="s s3">3</td></tr>
+          <tr><td class="total">Итого / 32</td><td class="s total">15</td><td class="s total">20</td><td class="s total">17</td><td class="s total">13</td><td class="s total">22</td><td class="s total">27</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin-top:18px">Ни один AI-инструмент не превышает <b>22/32</b>. Grammarly лидирует по крафту, но слеп к домену (формат 1, сеньорность 1). Две самые слабые строки рынка — <b>«заточка под формат»</b> и <b>«сеньорность суждения»</b>: никто выше 2. Именно там живой коуч даёт 4/4. <b>Возможность = крафт Grammarly × суждение коуча.</b></p>
+    <div class="kpi">
+      <div class="big">≥30/32</div>
+      <div class="lab"><b>Планка для mypath.</b> Обойти все AI-инструменты и приблизиться к потолку коуча по двум критериям, которые рынок не умеет: сеньорность + заточка под формат. Это, а не число фич, — условие победы.</div>
+    </div>
+  </section>
+
+  <!-- ================= PATTERNS ================= -->
+  <section id="patterns">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Паттерны</h2></div>
+    <p class="lead">Пять <b>принципиально разных</b> паттернов ядра «ответ → сеньорный фидбек». Каждый — своя архитектура, цена и ощущение.</p>
+    <div class="card" style="padding:8px 22px">
+      <div class="pat"><div class="k">A</div><div><h3>Real-time голосовое интервью</h3><p>Синхронный AI-интервьюер звонит: говорит, слушает, перебивает, follow-up вживую.</p><p class="weak">Максимум реализма и стоимости. Этим владеет UXMock; латентность бьёт по глубине.</p></div></div>
+      <div class="pat"><div class="k">B</div><div><h3>Чат-бот</h3><p>Пошаговый текстовый чат: AI спрашивает — ты печатаешь — он копает.</p><p class="weak">Дёшево, но печать ≠ как реально подают дизайн/портфолио (вслух).</p></div></div>
+      <div class="pat chosen"><div class="k">C</div><div><h3>Async: запись → оценочный отчёт <span style="color:var(--accent); font-size:12px">← выбрано</span></h3><p>Записываешь (голос) или печатаешь ответ целиком → структурный rubric-отчёт (покритериальные оценки + доказательства + переписанные версии).</p><p class="strength">Вся вычислительная мощность уходит в глубину оценки. STT асинхронный — дёшево, без латентности.</p></div></div>
+      <div class="pat chosen"><div class="k">D</div><div><h3>Inline-аннотация / разбор документа <span style="color:var(--accent); font-size:12px">← как вид фидбека</span></h3><p>Ответ показан как документ, фидбек привязан к конкретным фразам — поля как в Grammarly.</p><p class="strength">Делает сеньорное суждение «читаемым» — это критерий №2 бенчмарка.</p></div></div>
+      <div class="pat"><div class="k">E</div><div><h3>Гайд-визард</h3><p>Пошаговый каркас ведёт через фреймворк (CIRCLES / STAR-арка) поле за полем.</p><p class="weak">Учит структуре, но слишком жёсткий, чтобы репетировать живой ответ.</p></div></div>
+    </div>
+    <div class="pick">
+      <h3>Выбор: Pattern C (async запись → отчёт) + D (inline-разбор)</h3>
+      <ol>
+        <li><b>Совпадает со стратегией:</b> v1 — async, depth-first. C — это и есть она; A = воевать с UXMock на его поле.</li>
+        <li><b>Максимизирует moat:</b> без бюджета латентности 100% усилий модели идёт в глубокую покритериальную оценку (цель ≥30/32).</li>
+        <li><b>Под паттерн использования:</b> подготовка рваная и self-paced — записал ответ между делами, получил отчёт. Хорошо ложится на job-cycle pass.</li>
+        <li><b>Голос без цены:</b> запись отражает реальную подачу вслух, но async-STT дёшев и не требует латентности.</li>
+        <li><b>D сверху:</b> привязка каждого вывода рубрики к точным словам (модель Grammarly) делает суждение легитимным — ключевая дифференциация.</li>
+      </ol>
+      <p style="color:var(--muted); margin:14px 0 0; font-size:14px">Отложено: <b>A (real-time голос)</b> → премиум phase 2; <b>E (визард)</b> → опциональный «coach mode» для джунов; <b>B</b> — не берём.</p>
+    </div>
+  </section>
+
+  <!-- ================= CONCLUSIONS ================= -->
+  <section id="conclusions">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Выводы</h2></div>
+    <div class="concl">
+      <div class="card win"><h3>Moat — глубина, не новизна</h3><p>Рубрики уже есть у всех. Но ни один AI-инструмент не выше 2/4 по сеньорности суждения и заточке под формат. Выигрыш = крафт фидбека (Grammarly) × суждение живого коуча (ADPList).</p></div>
+      <div class="card"><h3>Не воевать с UXMock на real-time</h3><p>Они владеют live-голосом + design challenge. Идём <b>async, depth-first</b>, на portfolio walkthrough + behavioral — форматы, которые ни один hard-конкурент не закрывает.</p></div>
+      <div class="card"><h3>Обойти Mockin по суждению</h3><p>Их portfolio/STAR-фидбек — планка, которую нужно перебить покритериальным, доказательным фидбеком с цитатами.</p></div>
+      <div class="card"><h3>Цена и позиционирование</h3><p>~$12–15/мес + годовая со скидкой + <b>job-cycle one-time pass</b> ($30–45) под рваное удержание. Якорь ценности — живой коучинг $100–300/сессия.</p></div>
+      <div class="card"><h3>Якоря рубрики</h3><p><b>NN/g heuristic evaluation</b> (обоснуй критику названным принципом) для design challenge; <b>CIRCLES</b> (7 шагов + 6 критериев) для PM. Это фреймворки структурирования — адаптация в скоринг и есть наш сеньорный слой.</p></div>
+      <div class="card"><h3>Ядро продукта</h3><p>Async запись → глубокий rubric-отчёт, показанный как inline-разбор на полях (Pattern C + D). Real-time голос — премиум phase 2.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= MATRIX ================= -->
+  <section id="matrix">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Таблица сравнения</h2></div>
+    <p class="lead">6 конкурентов × 12 измерений + колонка-цель для mypath.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th></th><th>Mockin</th><th>UXMock</th><th>Exponent</th><th>Yoodli</th><th>Google&nbsp;Warmup</th><th>ADPList</th><th class="col-target">→ mypath</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Тир</td><td class="mid">Hard</td><td class="mid">Hard</td><td>Soft</td><td>Soft</td><td>Soft</td><td>Soft</td><td class="col-target">—</td></tr>
+          <tr><td>Аудитория</td><td>Дизайнеры</td><td>Дизайнеры</td><td>PM/SWE</td><td>Любая</td><td>Любая</td><td>Design+PM</td><td class="col-target">Дизайн → PM</td></tr>
+          <tr><td>JD-вопросы</td><td class="mid">Matcher</td><td class="yes">✅ challenge</td><td class="mid">частично</td><td class="no">generic</td><td class="no">✗</td><td>ментор</td><td class="col-target yes">✅ ядро</td></tr>
+          <tr><td>Portfolio walkthrough</td><td class="mid">только Checker</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✅ живой</td><td class="col-target yes">✅ фокус v1</td></tr>
+          <tr><td>Behavioral</td><td class="yes">✅ STAR</td><td class="no">✗</td><td class="yes">✅</td><td class="yes">✅</td><td class="mid">базово</td><td class="yes">✅</td><td class="col-target yes">✅ фокус v1</td></tr>
+          <tr><td>Design challenge</td><td class="no">✗</td><td class="yes">✅ live</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✅</td><td class="col-target mid">fast-follow</td></tr>
+          <tr><td>Голос</td><td>async</td><td class="yes">real-time</td><td>async</td><td>оба</td><td>запись</td><td>живой</td><td class="col-target">async v1</td></tr>
+          <tr><td>Скоринг</td><td class="mid">7/10</td><td>6 изм. /10</td><td>рубрика</td><td class="no">только подача</td><td class="no">нет</td><td>качеств.</td><td class="col-target yes">покритер. + доказ.</td></tr>
+          <tr><td>Глубина рубрики</td><td class="no">STAR-плоско</td><td class="mid">дженерик 6</td><td class="mid">солидно, общая</td><td class="no">—</td><td class="no">—</td><td class="yes">сеньор (чел.)</td><td class="col-target yes">сеньор, по формату</td></tr>
+          <tr><td>Прогресс</td><td class="mid">частично</td><td class="yes">✅</td><td class="mid">частично</td><td class="yes">✅</td><td class="no">✗</td><td class="no">✗</td><td class="col-target yes">✅</td></tr>
+          <tr><td>Цена</td><td>$9–45</td><td>$12.99/мес</td><td>платно</td><td>$8–20/мес</td><td class="yes">free</td><td class="yes">free*</td><td class="col-target">~$12–15 + pass</td></tr>
+          <tr><td>Угроза</td><td class="no">🔴 высокая</td><td class="no">🔴 высокая</td><td class="mid">🟡 средняя</td><td class="yes">🟢 низкая</td><td class="yes">🟢 низкая</td><td class="mid">🟡 средняя</td><td class="col-target">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--faint); font-size:12.5px; margin-top:10px">* ADPList бесплатен, но привязан к расписанию.</p>
+  </section>
+
+  <!-- ================= SCREENS ================= -->
+  <section id="screens">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Скриншоты</h2></div>
+    <p class="lead">Захвачено через Playwright (июнь 2026), исходники — <code style="color:var(--accent)">research/screens/</code>.</p>
+    <div class="shots">
+      <figure><img src="screens/mockin.png" alt="Mockin"><figcaption><b>Mockin</b><span class="mini t-hard">Hard</span></figcaption></figure>
+      <figure><img src="screens/uxmock.png" alt="UXMock"><figcaption><b>UXMock.io</b><span class="mini t-hard">Hard</span></figcaption></figure>
+      <figure><img src="screens/exponent.png" alt="Exponent"><figcaption><b>Exponent</b><span class="mini t-soft">Soft</span></figcaption></figure>
+      <figure><img src="screens/yoodli.png" alt="Yoodli"><figcaption><b>Yoodli</b><span class="mini t-soft">Soft</span></figcaption></figure>
+      <figure><img src="screens/google-warmup.png" alt="Google Interview Warmup"><figcaption><b>Google Warmup</b><span class="mini t-soft">Soft</span></figcaption></figure>
+      <figure><img src="screens/adplist.png" alt="ADPList"><figcaption><b>ADPList</b><span class="mini t-soft">Soft</span></figcaption></figure>
+      <figure><img src="screens/grammarly.png" alt="Grammarly"><figcaption><b>Grammarly</b><span class="mini t-asp">Aspir.</span></figcaption></figure>
+      <figure><img src="screens/speak.png" alt="Speak"><figcaption><b>Speak</b><span class="mini t-asp">Aspir.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <footer>
+    mypath · Research — собрано из competitors.md, benchmark.md, patterns.md. Данные: июнь 2026, self-reported страницы вендоров + Playwright. Подробности и источники — в соответствующих .md.
+  </footer>
+
+</div>
+</body>
+</html>
