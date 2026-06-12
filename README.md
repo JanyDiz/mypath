@@ -17,7 +17,7 @@ This repo holds the **design & product work** for mypath. Each folder has its ow
 | Folder | What's inside |
 |--------|---------------|
 | 📄 [`CLAUDE.md`](./CLAUDE.md) | **Source of truth** — full product brief, locked decisions, stack, and v1 rubric drafts |
-| 🔍 [`research/`](./research/) | Competitive landscape, pricing benchmarks, rubric frameworks → [`research.md`](./research/research.md); reference screenshots in [`screens/`](./research/screens/) |
+| 🔍 [`research/`](./research/) | Three levels — [`competitors.md`](./research/competitors.md) (hard/soft/aspirational + matrix), [`benchmark.md`](./research/benchmark.md) (feedback-quality scoring), [`patterns.md`](./research/patterns.md) (core-loop pattern choice); index in [`research.md`](./research/research.md); screenshots in [`screens/`](./research/screens/) |
 | ✏️ [`wireframes/`](./wireframes/) | Low/mid-fidelity layouts and user flows |
 | 💡 [`concept/`](./concept/) | Product concept, positioning, brand/tone direction |
 | 🎨 [`tokens/`](./tokens/) | Design tokens (color, type, spacing, motion) — single source of visual primitives |
